@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m4m_f/features/meditation/domain/entities/meditation_entity.dart';
+import 'package:m4m_f/features/meditation/presentation/pages/meditation_player_page.dart';
 
 import '../../domain/usecases/generate_meditation.dart';
 import '../bloc/meditation_bloc.dart';
@@ -28,7 +29,9 @@ class MeditationInputPage extends StatelessWidget {
             } else if (state is MeditationLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is MeditationLoaded) {
-              return MeditationResultView(meditation: state.meditation);
+              return MeditationPlayerPage(
+                meditation: state.meditation,
+              );
             } else if (state is MeditationError) {
               return const Center(child: Text('MeditationError state'));
             } else {
@@ -83,11 +86,6 @@ class MeditationResultView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            meditation.text,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 18),
-          ),
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
