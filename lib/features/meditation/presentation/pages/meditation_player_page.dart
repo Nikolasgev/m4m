@@ -13,7 +13,16 @@ class MeditationPlayerPage extends StatelessWidget {
     final audioPlayer = AudioPlayer();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Meditation Player')),
+      appBar: AppBar(
+        title: const Text('Meditation Player'),
+        leading: IconButton(
+          onPressed: () {
+            audioPlayer.dispose();
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -25,13 +34,23 @@ class MeditationPlayerPage extends StatelessWidget {
               style: const TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () async {
-                print('object');
-                await audioPlayer
-                    .play(DeviceFileSource(meditation.audioFile.path));
-              },
-              child: const Text('Play Meditation Audio'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () async {
+                    await audioPlayer
+                        .play(DeviceFileSource(meditation.audioFile.path));
+                  },
+                  icon: const Icon(Icons.play_arrow),
+                ),
+                IconButton(
+                  onPressed: () async {
+                    await audioPlayer.pause();
+                  },
+                  icon: const Icon(Icons.pause),
+                ),
+              ],
             ),
           ],
         ),

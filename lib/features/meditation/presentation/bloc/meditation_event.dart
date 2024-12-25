@@ -7,3 +7,5 @@ class GenerateMeditationEvent extends MeditationEvent {
 
   GenerateMeditationEvent({required this.prompt});
 }
+
+class ResetMeditationState extends MeditationEvent {}

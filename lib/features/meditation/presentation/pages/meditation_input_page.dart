@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:m4m_f/features/meditation/domain/entities/meditation_entity.dart';
 import 'package:m4m_f/features/meditation/presentation/pages/meditation_player_page.dart';
 
 import '../../domain/usecases/generate_meditation.dart';
@@ -21,6 +20,16 @@ class MeditationInputPage extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message)),
               );
+            } else if (state is MeditationLoaded) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MeditationPlayerPage(
+                    meditation: state.meditation,
+                  ),
+                ),
+              );
+              context.read<MeditationBloc>().add(ResetMeditationState());
             }
           },
           builder: (context, state) {
@@ -28,12 +37,6 @@ class MeditationInputPage extends StatelessWidget {
               return MeditationInputForm();
             } else if (state is MeditationLoading) {
               return const Center(child: CircularProgressIndicator());
-            } else if (state is MeditationLoaded) {
-              return MeditationPlayerPage(
-                meditation: state.meditation,
-              );
-            } else if (state is MeditationError) {
-              return const Center(child: Text('MeditationError state'));
             } else {
               return const Center(child: Text('An unexpected error occurred.'));
             }
@@ -67,31 +70,6 @@ class MeditationInputForm extends StatelessWidget {
                   );
             },
             child: const Text('Generate'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class MeditationResultView extends StatelessWidget {
-  final MeditationEntity meditation;
-
-  const MeditationResultView({super.key, required this.meditation});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              // Play audio (implement audio player)
-            },
-            child: const Text('Play Meditation Audio'),
           ),
         ],
       ),

@@ -19,5 +19,9 @@ class MeditationBloc extends Bloc<MeditationEvent, MeditationState> {
         (meditation) => emit(MeditationLoaded(meditation)),
       );
     });
+
+    on<ResetMeditationState>((event, emit) {
+      emit(MeditationInitial());
+    });
   }
 }
