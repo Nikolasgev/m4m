@@ -23,5 +23,21 @@ class MeditationBloc extends Bloc<MeditationEvent, MeditationState> {
     on<ResetMeditationState>((event, emit) {
       emit(MeditationInitial());
     });
+
+    on<ToggleCategorySelection>((event, emit) {
+      if (state is MeditationInitial) {
+        final currentState = state as MeditationInitial;
+        final isSelected =
+            currentState.selectedCategories.contains(event.category);
+
+        final updatedCategories = isSelected
+            ? currentState.selectedCategories
+                .where((category) => category != event.category)
+                .toList()
+            : [...currentState.selectedCategories, event.category];
+
+        emit(MeditationInitial(selectedCategories: updatedCategories));
+      }
+    });
   }
 }

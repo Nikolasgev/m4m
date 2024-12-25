@@ -9,3 +9,9 @@ class GenerateMeditationEvent extends MeditationEvent {
 }
 
 class ResetMeditationState extends MeditationEvent {}
+
+class ToggleCategorySelection extends MeditationEvent {
+  final String category;
+
+  ToggleCategorySelection(this.category);
+}

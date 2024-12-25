@@ -38,7 +38,23 @@ class MeditationInputPage extends StatelessWidget {
             } else if (state is MeditationLoading) {
               return const Center(child: CircularProgressIndicator());
             } else {
-              return const Center(child: Text('An unexpected error occurred.'));
+              return Center(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('An unexpected error occurred.'),
+                  IconButton(
+                      onPressed: () {
+                        context
+                            .read<MeditationBloc>()
+                            .add(ResetMeditationState());
+                      },
+                      icon: const Icon(
+                        Icons.replay_outlined,
+                        size: 20,
+                      ))
+                ],
+              ));
             }
           },
         ),
@@ -52,12 +68,28 @@ class MeditationInputForm extends StatelessWidget {
 
   MeditationInputForm({super.key});
 
+  final List<String> currentMood = [
+    'Грусть',
+    'Усталость',
+    'Радость',
+    'Расслабление',
+    'Тревога',
+    'Страх',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
+          Wrap(
+            spacing: 16,
+            runSpacing: 8,
+            children: currentMood.map((label) {
+              return MoodButtonWidget(label: label);
+            }).toList(),
+          ),
           TextField(
             controller: _controller,
             decoration: const InputDecoration(labelText: 'Enter prompt'),
@@ -65,13 +97,59 @@ class MeditationInputForm extends StatelessWidget {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
+              final selectedCategories =
+                  (context.read<MeditationBloc>().state as MeditationInitial)
+                      .selectedCategories;
+
+              final prompt =
+                  '${selectedCategories.join(", ")} ${_controller.text}';
+
               context.read<MeditationBloc>().add(
-                    GenerateMeditationEvent(prompt: _controller.text),
+                    GenerateMeditationEvent(prompt: prompt),
                   );
             },
             child: const Text('Generate'),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class MoodButtonWidget extends StatelessWidget {
+  final String label;
+
+  const MoodButtonWidget({
+    super.key,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isSelected = context.select<MeditationBloc, bool>(
+      (bloc) => (bloc.state is MeditationInitial)
+          ? (bloc.state as MeditationInitial).selectedCategories.contains(label)
+          : false,
+    );
+
+    return GestureDetector(
+      onTap: () {
+        context.read<MeditationBloc>().add(ToggleCategorySelection(label));
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.blue[300] : Colors.blue[50],
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.black,
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+          ),
+        ),
       ),
     );
   }

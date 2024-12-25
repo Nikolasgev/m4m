@@ -2,7 +2,11 @@ part of 'meditation_bloc.dart';
 
 abstract class MeditationState {}
 
-class MeditationInitial extends MeditationState {}
+class MeditationInitial extends MeditationState {
+  final List<String> selectedCategories;
+
+  MeditationInitial({this.selectedCategories = const []});
+}
 
 class MeditationLoading extends MeditationState {}
 
