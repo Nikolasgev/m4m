@@ -33,9 +33,9 @@ class MeditationInputForm extends StatelessWidget {
   ];
 
   final List<String> durations = [
-    '~5 минут',
-    '~10 минут',
-    '~15 минут',
+    '5 минут',
+    '10 минут',
+    '15 минут',
   ];
 
   @override
@@ -53,7 +53,7 @@ class MeditationInputForm extends StatelessWidget {
             ),
             const SizedBox(height: 32),
 
-            // Выбор звуков на фоне 'Выберите фоновые звуки'
+            // Выбор звуков на фоне
             CustomWrap(
               list: backgroundSounds,
               title: 'Выберите фоновые звуки',
@@ -62,26 +62,28 @@ class MeditationInputForm extends StatelessWidget {
 
             // Выбор голоса
             CustomDropdownSelector(
-                context: context,
-                title: 'Выберите голос озвучки',
-                options: voiceOptions,
-                onSelected: (selectedVoice) {
-                  context.read<MeditationBloc>().add(
-                        ToggleCategorySelection('voice:$selectedVoice'),
-                      );
-                }),
+              context: context,
+              title: 'Выберите голос озвучки',
+              options: voiceOptions,
+              onSelected: (selectedVoice) {
+                context.read<MeditationBloc>().add(
+                      ToggleCategorySelection('voice:$selectedVoice'),
+                    );
+              },
+            ),
             const SizedBox(height: 32),
 
             // Выбор длительности
             CustomDropdownSelector(
-                context: context,
-                title: 'Выберите длительность',
-                options: durations,
-                onSelected: (selectedDuration) {
-                  context.read<MeditationBloc>().add(
-                        ToggleCategorySelection('duration:$selectedDuration'),
-                      );
-                }),
+              context: context,
+              title: 'Выберите длительность',
+              options: durations,
+              onSelected: (selectedDuration) {
+                context.read<MeditationBloc>().add(
+                      ToggleCategorySelection('duration:$selectedDuration'),
+                    );
+              },
+            ),
             const SizedBox(height: 32),
 
             // Поле ввода текста
@@ -100,23 +102,49 @@ class MeditationInputForm extends StatelessWidget {
 
             // Кнопка генерации
             ElevatedButton(
-              onPressed: () {
-                final selectedCategories =
-                    (context.read<MeditationBloc>().state as MeditationInitial)
-                        .selectedCategories;
-
-                final prompt =
-                    '${selectedCategories.join(", ")} ${_controller.text}';
-
-                context.read<MeditationBloc>().add(
-                      GenerateMeditationEvent(prompt: prompt),
-                    );
-              },
+              onPressed: () => _onGeneratePressed(context),
               child: const Text('Generate'),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _onGeneratePressed(BuildContext context) {
+    final selectedCategories =
+        (context.read<MeditationBloc>().state as MeditationInitial)
+            .selectedCategories;
+
+    // Проверка обязательных полей
+    final isValid = [
+      _hasSelection(selectedCategories, currentMood),
+      _hasSelection(selectedCategories, voiceOptions, prefix: 'voice:'),
+      _hasSelection(selectedCategories, durations, prefix: 'duration:'),
+    ].every((condition) => condition);
+
+    if (!isValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Пожалуйста, заполните обязательные поля: выберите настроение, голос и длительность.',
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final prompt = '${selectedCategories.join(", ")} ${_controller.text}';
+
+    context.read<MeditationBloc>().add(
+          GenerateMeditationEvent(prompt: prompt),
+        );
+  }
+
+  bool _hasSelection(List<String> selectedCategories, List<String> options,
+      {String prefix = ''}) {
+    return selectedCategories
+        .any((category) => options.contains(category.replaceFirst(prefix, '')));
   }
 }
