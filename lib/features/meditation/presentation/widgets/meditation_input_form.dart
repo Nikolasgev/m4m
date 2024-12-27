@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m4m_f/features/meditation/presentation/bloc/meditation_bloc.dart';
-import 'package:m4m_f/features/meditation/presentation/widgets/mood_button_selector_widget.dart';
+import 'package:m4m_f/features/meditation/presentation/widgets/custom_dropdown_selector.dart';
+import 'package:m4m_f/features/meditation/presentation/widgets/custom_wrap.dart';
 
 class MeditationInputForm extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
@@ -17,33 +18,87 @@ class MeditationInputForm extends StatelessWidget {
     'Страх',
   ];
 
+  final List<String> voiceOptions = [
+    'Мужской',
+    'Женский',
+    'Робот',
+  ];
+
+  final List<String> backgroundSounds = [
+    'Шум дождя',
+    'Пение птиц',
+    'Шум моря',
+    'Шум ветра',
+    "Гром",
+  ];
+
+  final List<String> durations = [
+    '~5 минут',
+    '~10 минут',
+    '~15 минут',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Wrap(
-              spacing: 16,
-              runSpacing: 8,
-              children: currentMood.map((label) {
-                return MoodButtonSelectorWidget(label: label);
-              }).toList(),
+            // Выбор состояния
+            CustomWrap(
+              list: currentMood,
+              title: 'Какие эмоции вы сейчас испытываете?',
             ),
             const SizedBox(height: 32),
+
+            // Выбор звуков на фоне 'Выберите фоновые звуки'
+            CustomWrap(
+              list: backgroundSounds,
+              title: 'Выберите фоновые звуки',
+            ),
+            const SizedBox(height: 32),
+
+            // Выбор голоса
+            CustomDropdownSelector(
+                context: context,
+                title: 'Выберите голос озвучки',
+                options: voiceOptions,
+                onSelected: (selectedVoice) {
+                  context.read<MeditationBloc>().add(
+                        ToggleCategorySelection('voice:$selectedVoice'),
+                      );
+                }),
+            const SizedBox(height: 32),
+
+            // Выбор длительности
+            CustomDropdownSelector(
+                context: context,
+                title: 'Выберите длительность',
+                options: durations,
+                onSelected: (selectedDuration) {
+                  context.read<MeditationBloc>().add(
+                        ToggleCategorySelection('duration:$selectedDuration'),
+                      );
+                }),
+            const SizedBox(height: 32),
+
+            // Поле ввода текста
             TextFormField(
               controller: _controller,
               maxLines: null,
               keyboardType: TextInputType.multiline,
               decoration: const InputDecoration(
-                labelText: 'Я чувствую себя...',
+                labelText: 'Напишите что бы вы хотели добавить?',
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 8, horizontal: 8),
               ),
               style: const TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 16),
+
+            // Кнопка генерации
             ElevatedButton(
               onPressed: () {
                 final selectedCategories =
