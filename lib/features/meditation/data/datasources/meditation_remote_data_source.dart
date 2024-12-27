@@ -21,10 +21,11 @@ class MeditationRemoteDataSourceImpl implements MeditationRemoteDataSource {
           'RemoteDataSource: Received response with status code: ${response.statusCode}');
       if (response.statusCode == 200) {
         // Получаем временную директорию
-        final tempDir = await getTemporaryDirectory();
-        final filePath = '${tempDir.path}/output.mp3';
+        final tempDir = await getApplicationDocumentsDirectory();
+        final filePath =
+            '${tempDir.path}/output_${DateTime.now().millisecondsSinceEpoch}.mp3';
 
-        // Сохраняем файл в временную директорию
+        // Сохраняем файл в указанную директорию
         final file = File(filePath);
         await file.writeAsBytes(response.bodyBytes);
         print('RemoteDataSource: File saved at $filePath');

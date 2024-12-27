@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m4m_f/features/meditation/presentation/bloc/meditation_bloc.dart';
+import 'package:m4m_f/features/meditation/presentation/pages/meditation_history_page.dart';
 import 'package:m4m_f/features/meditation/presentation/widgets/custom_dropdown_selector.dart';
 import 'package:m4m_f/features/meditation/presentation/widgets/custom_wrap.dart';
 
@@ -104,6 +105,14 @@ class MeditationInputForm extends StatelessWidget {
             ElevatedButton(
               onPressed: () => _onGeneratePressed(context),
               child: const Text('Generate'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const MeditationHistoryPage()),
+              ),
+              child: const Text('Saves'),
             ),
           ],
         ),

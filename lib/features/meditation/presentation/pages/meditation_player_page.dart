@@ -1,53 +1,102 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:m4m_f/features/meditation/domain/entities/meditation_entity.dart';
+import 'package:m4m_f/features/meditation/presentation/cubit/audio_player_cubit.dart';
 
-import '../../domain/entities/meditation_entity.dart';
-
-class MeditationPlayerPage extends StatefulWidget {
+class MeditationPlayerPage extends StatelessWidget {
   final MeditationEntity meditation;
 
   const MeditationPlayerPage({super.key, required this.meditation});
 
   @override
-  State<MeditationPlayerPage> createState() => _MeditationPlayerPageState();
-}
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) =>
+          AudioPlayerCubit(AudioPlayer())..play(meditation.audioFile.path),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Meditation Player'),
+          leading: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back_ios),
+          ),
+        ),
+        body: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+          builder: (context, state) {
+            final cubit = context.read<AudioPlayerCubit>();
 
-class _MeditationPlayerPageState extends State<MeditationPlayerPage> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
-  Duration _duration = Duration.zero;
-  Duration _position = Duration.zero;
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  // Текст медитации
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        meditation.text,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
 
-  @override
-  void initState() {
-    super.initState();
+                  // Ползунок для перемотки
+                  Slider(
+                    min: 0,
+                    max: state.duration.inSeconds.toDouble(),
+                    value: state.position.inSeconds
+                        .toDouble()
+                        .clamp(0, state.duration.inSeconds.toDouble()),
+                    onChanged: (value) {
+                      cubit.seek(Duration(seconds: value.toInt()));
+                    },
+                  ),
 
-    // Устанавливаем обработчики
-    _audioPlayer.onDurationChanged.listen((newDuration) {
-      setState(() {
-        _duration = newDuration;
-      });
-    });
+                  // Время воспроизведения
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(_formatDuration(state.position)),
+                        Text(_formatDuration(state.duration)),
+                      ],
+                    ),
+                  ),
 
-    _audioPlayer.onPositionChanged.listen((newPosition) {
-      setState(() {
-        _position = newPosition;
-      });
-    });
-
-    _audioPlayer.onPlayerComplete.listen((_) {
-      setState(() {
-        _position = Duration.zero;
-      });
-    });
-
-    // Загружаем файл для воспроизведения
-    _audioPlayer.setSource(DeviceFileSource(widget.meditation.audioFile.path));
-  }
-
-  @override
-  void dispose() {
-    _audioPlayer.dispose();
-    super.dispose();
+                  // Кнопки управления воспроизведением
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () => cubit
+                            .seek(state.position - const Duration(seconds: 10)),
+                        icon: const Icon(Icons.replay_10, size: 36),
+                      ),
+                      IconButton(
+                        onPressed: state.isPlaying
+                            ? cubit.pause
+                            : () => cubit.play(meditation.audioFile.path),
+                        icon: Icon(
+                          state.isPlaying ? Icons.pause : Icons.play_arrow,
+                          size: 36,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: cubit.stop,
+                        icon: const Icon(Icons.stop, size: 36),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   String _formatDuration(Duration duration) {
@@ -55,105 +104,5 @@ class _MeditationPlayerPageState extends State<MeditationPlayerPage> {
     final minutes = twoDigits(duration.inMinutes.remainder(60));
     final seconds = twoDigits(duration.inSeconds.remainder(60));
     return '$minutes:$seconds';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Meditation Player'),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back_ios),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Текст медитации
-            Expanded(
-              child: Center(
-                child: Text(
-                  widget.meditation.text,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-
-            // Ползунок для перемотки
-            Slider(
-              min: 0,
-              max: _duration.inSeconds.toDouble(),
-              value: _position.inSeconds
-                  .toDouble()
-                  .clamp(0, _duration.inSeconds.toDouble()),
-              onChanged: (value) async {
-                final position = Duration(seconds: value.toInt());
-                await _audioPlayer.seek(position);
-                setState(() {
-                  _position = position;
-                });
-              },
-            ),
-
-            // Время воспроизведения
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(_formatDuration(_position)),
-                  Text(_formatDuration(_duration)),
-                ],
-              ),
-            ),
-
-            // Кнопки управления воспроизведением
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: () async {
-                    final newPosition = _position - const Duration(seconds: 10);
-                    await _audioPlayer.seek(newPosition < Duration.zero
-                        ? Duration.zero
-                        : newPosition);
-                  },
-                  icon: const Icon(Icons.replay_10, size: 36),
-                ),
-                IconButton(
-                  onPressed: () async {
-                    await _audioPlayer.resume();
-                  },
-                  icon: const Icon(Icons.play_arrow, size: 36),
-                ),
-                IconButton(
-                  onPressed: () async {
-                    await _audioPlayer.pause();
-                  },
-                  icon: const Icon(Icons.pause, size: 36),
-                ),
-                IconButton(
-                  onPressed: () async {
-                    await _audioPlayer.stop();
-                    setState(() {
-                      _position = Duration.zero;
-                    });
-                  },
-                  icon: const Icon(Icons.stop, size: 36),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
-    );
   }
 }
