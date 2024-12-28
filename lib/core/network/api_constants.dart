@@ -1,1 +1,1 @@
-const String baseURL = 'http://0.0.0.0:5001/generate';
+const String baseURL = 'http://127.0.0.1:5000/process-text';
