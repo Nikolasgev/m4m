@@ -1,5 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:m4m_f/features/meditation/presentation/pages/registration_page.dart';
+import 'package:m4m_f/features/meditation/presentation/pages/auth_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -12,15 +13,16 @@ class ProfilePage extends StatelessWidget {
         children: [
           const Text('Profile Page Content'),
           ElevatedButton(
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const RegistrationPage(),
+                  builder: (context) => const AuthPage(),
                 ),
               );
             },
-            child: const Text('Регистрация'),
+            child: const Text('Выйти'),
           ),
         ],
       ),

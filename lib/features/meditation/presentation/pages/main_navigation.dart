@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m4m_f/features/meditation/domain/usecases/generate_meditation.dart';
 import 'package:m4m_f/features/meditation/presentation/bloc/meditation_bloc.dart';
+import 'package:m4m_f/features/meditation/presentation/pages/auth_page.dart';
 import 'package:m4m_f/features/meditation/presentation/pages/meditation_history_page.dart';
 import 'package:m4m_f/features/meditation/presentation/pages/meditation_input_page.dart';
 import 'package:m4m_f/features/meditation/presentation/pages/profile_page.dart';
@@ -30,30 +32,43 @@ class MainNavigationState extends State<MainNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => MeditationBloc(context.read<GenerateMeditation>()),
-      child: Scaffold(
-        body: _widgetOptions.elementAt(_selectedIndex),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasData) {
+          // Пользователь авторизован
+          return BlocProvider(
+            create: (_) => MeditationBloc(context.read<GenerateMeditation>()),
+            child: Scaffold(
+              body: _widgetOptions.elementAt(_selectedIndex),
+              bottomNavigationBar: BottomNavigationBar(
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.history),
+                    label: 'History',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.person),
+                    label: 'Profile',
+                  ),
+                ],
+                currentIndex: _selectedIndex,
+                selectedItemColor: Colors.blue,
+                onTap: _onItemTapped,
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.history),
-              label: 'History',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.blue,
-          onTap: _onItemTapped,
-        ),
-      ),
+          );
+        } else {
+          // Пользователь не авторизован
+          return const AuthPage();
+        }
+      },
     );
   }
 }
