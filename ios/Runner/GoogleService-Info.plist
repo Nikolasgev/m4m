@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyBkVfDlS2J_NWTfzXe_nTbUz3W_su4EhKg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>29992406568</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.m4mf</string>
+	<key>PROJECT_ID</key>
+	<string>mform-6aa5f</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mform-6aa5f.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:29992406568:ios:440db6e9350c476a8a2f1d</string>
+	<key>DATABASE_URL</key>
+	<string>https://mform-6aa5f-default-rtdb.europe-west1.firebasedatabase.app</string>
+</dict>
+</plist>

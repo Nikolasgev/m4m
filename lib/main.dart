@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:m4m_f/core/network/api_client.dart';
 import 'package:m4m_f/core/network/api_constants.dart';
@@ -8,7 +9,7 @@ import 'features/meditation/data/repositories/meditation_repository_impl.dart';
 import 'features/meditation/domain/usecases/generate_meditation.dart';
 import 'features/meditation/presentation/pages/main_navigation.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Setup API client and dependencies
   final apiClient = ApiClient(baseURL);
@@ -16,6 +17,8 @@ void main() {
   final meditationRepository =
       MeditationRepositoryImpl(remoteDataSource: remoteDataSource);
   final generateMeditation = GenerateMeditation(meditationRepository);
+
+  await Firebase.initializeApp();
 
   runApp(
     MultiProvider(

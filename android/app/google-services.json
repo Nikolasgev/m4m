@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "29992406568",
+    "firebase_url": "https://mform-6aa5f-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "mform-6aa5f",
+    "storage_bucket": "mform-6aa5f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29992406568:android:987c73ccac1df72d8a2f1d",
+        "android_client_info": {
+          "package_name": "com.ng.m4m"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBG03ug8zN7vWpjANCE9kYA3p7pIGNkUgM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
