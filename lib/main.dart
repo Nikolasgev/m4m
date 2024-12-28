@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'features/meditation/data/datasources/meditation_remote_data_source.dart';
 import 'features/meditation/data/repositories/meditation_repository_impl.dart';
 import 'features/meditation/domain/usecases/generate_meditation.dart';
-import 'features/meditation/presentation/pages/meditation_input_page.dart';
+import 'features/meditation/presentation/pages/main_navigation.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Meditation App',
-      home: MeditationInputPage(),
+      home: MainNavigation(),
     );
   }
 }

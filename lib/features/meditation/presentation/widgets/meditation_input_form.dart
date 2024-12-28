@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m4m_f/features/meditation/presentation/bloc/meditation_bloc.dart';
-import 'package:m4m_f/features/meditation/presentation/pages/meditation_history_page.dart';
 import 'package:m4m_f/features/meditation/presentation/widgets/custom_dropdown_selector.dart';
 import 'package:m4m_f/features/meditation/presentation/widgets/custom_wrap.dart';
 
@@ -41,80 +40,74 @@ class MeditationInputForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Выбор состояния
-            CustomWrap(
-              list: currentMood,
-              title: 'Какие эмоции вы сейчас испытываете?',
-            ),
-            const SizedBox(height: 32),
-
-            // Выбор звуков на фоне
-            CustomWrap(
-              list: backgroundSounds,
-              title: 'Выберите фоновые звуки',
-            ),
-            const SizedBox(height: 32),
-
-            // Выбор голоса
-            CustomDropdownSelector(
-              context: context,
-              title: 'Выберите голос озвучки',
-              options: voiceOptions,
-              onSelected: (selectedVoice) {
-                context.read<MeditationBloc>().add(
-                      ToggleCategorySelection('voice:$selectedVoice'),
-                    );
-              },
-            ),
-            const SizedBox(height: 32),
-
-            // Выбор длительности
-            CustomDropdownSelector(
-              context: context,
-              title: 'Выберите длительность',
-              options: durations,
-              onSelected: (selectedDuration) {
-                context.read<MeditationBloc>().add(
-                      ToggleCategorySelection('duration:$selectedDuration'),
-                    );
-              },
-            ),
-            const SizedBox(height: 32),
-
-            // Поле ввода текста
-            TextFormField(
-              controller: _controller,
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
-              decoration: const InputDecoration(
-                labelText: 'Напишите что бы вы хотели добавить?',
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Выбор состояния
+              CustomWrap(
+                list: currentMood,
+                title: 'Какие эмоции вы сейчас испытываете?',
               ),
-              style: const TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 32),
 
-            // Кнопка генерации
-            ElevatedButton(
-              onPressed: () => _onGeneratePressed(context),
-              child: const Text('Generate'),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const MeditationHistoryPage()),
+              // Выбор звуков на фоне
+              CustomWrap(
+                list: backgroundSounds,
+                title: 'Выберите фоновые звуки',
               ),
-              child: const Text('Saves'),
-            ),
-          ],
+              const SizedBox(height: 32),
+
+              // Выбор голоса
+              CustomDropdownSelector(
+                context: context,
+                title: 'Выберите голос озвучки',
+                options: voiceOptions,
+                onSelected: (selectedVoice) {
+                  context.read<MeditationBloc>().add(
+                        ToggleCategorySelection('voice:$selectedVoice'),
+                      );
+                },
+              ),
+              const SizedBox(height: 32),
+
+              // Выбор длительности
+              CustomDropdownSelector(
+                context: context,
+                title: 'Выберите длительность',
+                options: durations,
+                onSelected: (selectedDuration) {
+                  context.read<MeditationBloc>().add(
+                        ToggleCategorySelection('duration:$selectedDuration'),
+                      );
+                },
+              ),
+              const SizedBox(height: 32),
+
+              // Поле ввода текста
+              TextFormField(
+                controller: _controller,
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+                decoration: const InputDecoration(
+                  labelText: 'Напишите что бы вы хотели добавить?',
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                ),
+                style: const TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 16),
+
+              // Кнопка генерации
+              ElevatedButton(
+                onPressed: () => _onGeneratePressed(context),
+                child: const Text('Generate'),
+              ),
+            ],
+          ),
         ),
       ),
     );
