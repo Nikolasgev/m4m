@@ -8,14 +8,37 @@ import 'package:m4m_f/features/meditation/presentation/pages/meditation_history_
 import 'package:m4m_f/features/meditation/presentation/pages/meditation_input_page.dart';
 import 'package:m4m_f/features/meditation/presentation/pages/profile_page.dart';
 
-class MainNavigation extends StatefulWidget {
+class MainNavigation extends StatelessWidget {
   const MainNavigation({super.key});
 
   @override
-  MainNavigationState createState() => MainNavigationState();
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasData) {
+          return BlocProvider(
+            create: (_) => MeditationBloc(context.read<GenerateMeditation>()),
+            child: const MainNavigationContent(),
+          );
+        } else {
+          return const AuthPage();
+        }
+      },
+    );
+  }
 }
 
-class MainNavigationState extends State<MainNavigation> {
+class MainNavigationContent extends StatefulWidget {
+  const MainNavigationContent({super.key});
+
+  @override
+  MainNavigationContentState createState() => MainNavigationContentState();
+}
+
+class MainNavigationContentState extends State<MainNavigationContent> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
@@ -32,43 +55,27 @@ class MainNavigationState extends State<MainNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasData) {
-          // Пользователь авторизован
-          return BlocProvider(
-            create: (_) => MeditationBloc(context.read<GenerateMeditation>()),
-            child: Scaffold(
-              body: _widgetOptions.elementAt(_selectedIndex),
-              bottomNavigationBar: BottomNavigationBar(
-                items: const <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.home),
-                    label: 'Home',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.history),
-                    label: 'History',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.person),
-                    label: 'Profile',
-                  ),
-                ],
-                currentIndex: _selectedIndex,
-                selectedItemColor: Colors.blue,
-                onTap: _onItemTapped,
-              ),
-            ),
-          );
-        } else {
-          // Пользователь не авторизован
-          return const AuthPage();
-        }
-      },
+    return Scaffold(
+      body: _widgetOptions.elementAt(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'History',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        onTap: _onItemTapped,
+      ),
     );
   }
 }
