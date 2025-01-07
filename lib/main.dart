@@ -23,7 +23,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  // Регистрация зависимостей в GetIt
   getIt.registerSingleton<ApiClient>(ApiClient(baseURL));
   getIt.registerSingleton<MeditationRemoteDataSource>(
       MeditationRemoteDataSourceImpl(getIt<ApiClient>()));
@@ -31,8 +30,6 @@ Future<void> main() async {
       remoteDataSource: getIt<MeditationRemoteDataSource>()));
   getIt.registerSingleton<GenerateMeditation>(
       GenerateMeditation(getIt<MeditationRepository>()));
-  getIt.registerSingleton<MeditationHistoryRepository>(
-      MeditationHistoryRepository());
 
   runApp(
     MultiProvider(

@@ -56,7 +56,6 @@ class RegistrationPageState extends State<RegistrationPage> {
                 },
               ),
               const SizedBox(height: 16),
-
               TextFormField(
                 controller: _passwordController,
                 decoration: const InputDecoration(
@@ -75,8 +74,6 @@ class RegistrationPageState extends State<RegistrationPage> {
                 },
               ),
               const SizedBox(height: 16),
-
-              // Поле для подтверждения пароля
               TextFormField(
                 controller: _confirmPasswordController,
                 decoration: const InputDecoration(
@@ -95,7 +92,6 @@ class RegistrationPageState extends State<RegistrationPage> {
                 },
               ),
               const SizedBox(height: 32),
-
               BlocConsumer<AuthBloc, AuthState>(
                 listener: (context, state) {
                   if (state is AuthAuthenticated) {
@@ -137,7 +133,6 @@ class RegistrationPageState extends State<RegistrationPage> {
                   );
                 },
               ),
-
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
