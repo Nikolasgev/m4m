@@ -1,89 +1,29 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m4m_f/features/meditation/domain/entities/meditation_entity.dart';
+import 'package:m4m_f/features/meditation/presentation/bloc/meditation_history_bloc.dart';
 import 'package:m4m_f/features/meditation/presentation/pages/meditation_player_page.dart';
-import 'package:path_provider/path_provider.dart';
 
-class MeditationHistoryPage extends StatefulWidget {
+class MeditationHistoryPage extends StatelessWidget {
   const MeditationHistoryPage({super.key});
-
-  @override
-  MeditationHistoryPageState createState() {
-    return MeditationHistoryPageState();
-  }
-}
-
-class MeditationHistoryPageState extends State<MeditationHistoryPage> {
-  late Future<List<File>> _meditationFiles;
-
-  @override
-  void initState() {
-    super.initState();
-    _meditationFiles = _loadMeditationFiles();
-  }
-
-  Future<List<File>> _loadMeditationFiles() async {
-    final directory = await getApplicationDocumentsDirectory();
-    final files = directory.listSync().whereType<File>().toList();
-    return files;
-  }
-
-  void _renameFile(File file) async {
-    final TextEditingController controller =
-        TextEditingController(text: file.uri.pathSegments.last);
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Переименовать файл'),
-        content: TextField(
-          controller: controller,
-          decoration: const InputDecoration(hintText: 'Новое имя файла'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена'),
-          ),
-          TextButton(
-            onPressed: () async {
-              final directory = await getApplicationDocumentsDirectory();
-              final newPath = '${directory.path}/${controller.text}';
-              await file.rename(newPath);
-              setState(() {
-                _meditationFiles = _loadMeditationFiles();
-              });
-              Navigator.of(context).pop();
-            },
-            child: const Text('Сохранить'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _deleteFile(File file) async {
-    await file.delete();
-    setState(() {
-      _meditationFiles = _loadMeditationFiles();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('История медитаций')),
-      body: FutureBuilder<List<File>>(
-        future: _meditationFiles,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      body: BlocBuilder<MeditationHistoryBloc, MeditationHistoryState>(
+        builder: (context, state) {
+          if (state is MeditationHistoryLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return const Center(child: Text('Ошибка загрузки файлов.'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Нет сохраненных медитаций.'));
-          } else {
-            final files = snapshot.data!;
+          } else if (state is MeditationHistoryError) {
+            return Center(child: Text(state.message));
+          } else if (state is MeditationHistoryLoaded) {
+            final files = state.history;
+            if (files.isEmpty) {
+              return const Center(child: Text('Нет сохраненных медитаций.'));
+            }
             return ListView.builder(
               itemCount: files.length,
               itemBuilder: (context, index) {
@@ -95,11 +35,11 @@ class MeditationHistoryPageState extends State<MeditationHistoryPage> {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.edit),
-                        onPressed: () => _renameFile(file),
+                        onPressed: () => _renameFile(context, file),
                       ),
                       IconButton(
                         icon: const Icon(Icons.delete),
-                        onPressed: () => _deleteFile(file),
+                        onPressed: () => _deleteFile(context, file),
                       ),
                     ],
                   ),
@@ -119,9 +59,45 @@ class MeditationHistoryPageState extends State<MeditationHistoryPage> {
                 );
               },
             );
+          } else {
+            return const Center(child: Text('Неизвестное состояние.'));
           }
         },
       ),
     );
+  }
+
+  void _renameFile(BuildContext context, File file) async {
+    final TextEditingController controller =
+        TextEditingController(text: file.uri.pathSegments.last);
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Переименовать файл'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(hintText: 'Новое имя файла'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () {
+              context.read<MeditationHistoryBloc>().add(
+                    RenameMeditation(file, controller.text),
+                  );
+              Navigator.of(context).pop();
+            },
+            child: const Text('Сохранить'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _deleteFile(BuildContext context, File file) {
+    context.read<MeditationHistoryBloc>().add(DeleteMeditation(file));
   }
 }

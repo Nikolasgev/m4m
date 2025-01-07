@@ -7,12 +7,14 @@ import 'package:m4m_f/core/network/api_client.dart';
 import 'package:m4m_f/core/network/api_constants.dart';
 import 'package:m4m_f/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:m4m_f/features/auth/presentation/pages/login_page.dart';
+import 'package:m4m_f/features/meditation/data/repositories/meditation_history_repository.dart';
 import 'package:m4m_f/features/meditation/domain/repositories/meditation_repository.dart';
 import 'package:provider/provider.dart';
 
 import 'features/meditation/data/datasources/meditation_remote_data_source.dart';
 import 'features/meditation/data/repositories/meditation_repository_impl.dart';
 import 'features/meditation/domain/usecases/generate_meditation.dart';
+import 'features/meditation/presentation/bloc/meditation_history_bloc.dart';
 import 'features/meditation/presentation/pages/main_navigation.dart';
 
 final getIt = GetIt.instance;
@@ -21,6 +23,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
+  // Регистрация зависимостей в GetIt
   getIt.registerSingleton<ApiClient>(ApiClient(baseURL));
   getIt.registerSingleton<MeditationRemoteDataSource>(
       MeditationRemoteDataSourceImpl(getIt<ApiClient>()));
@@ -28,6 +31,8 @@ Future<void> main() async {
       remoteDataSource: getIt<MeditationRemoteDataSource>()));
   getIt.registerSingleton<GenerateMeditation>(
       GenerateMeditation(getIt<MeditationRepository>()));
+  getIt.registerSingleton<MeditationHistoryRepository>(
+      MeditationHistoryRepository());
 
   runApp(
     MultiProvider(
@@ -37,6 +42,11 @@ Future<void> main() async {
         BlocProvider(
           create: (context) =>
               AuthBloc(FirebaseAuth.instance)..add(CheckAuthStatusEvent()),
+        ),
+        BlocProvider(
+          create: (context) => MeditationHistoryBloc(
+            getIt<MeditationHistoryRepository>(),
+          )..add(LoadMeditationHistory()),
         ),
       ],
       child: const MyApp(),
