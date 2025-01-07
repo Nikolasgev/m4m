@@ -35,7 +35,7 @@ class MeditationHistoryPage extends StatelessWidget {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.edit),
-                        onPressed: () => _renameFile(context, file),
+                        onPressed: () => _showRenameDialog(context, file),
                       ),
                       IconButton(
                         icon: const Icon(Icons.delete),
@@ -67,7 +67,7 @@ class MeditationHistoryPage extends StatelessWidget {
     );
   }
 
-  void _renameFile(BuildContext context, File file) async {
+  void _showRenameDialog(BuildContext context, File file) async {
     final TextEditingController controller =
         TextEditingController(text: file.uri.pathSegments.last);
     await showDialog(

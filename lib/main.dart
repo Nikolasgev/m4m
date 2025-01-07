@@ -30,6 +30,8 @@ Future<void> main() async {
       remoteDataSource: getIt<MeditationRemoteDataSource>()));
   getIt.registerSingleton<GenerateMeditation>(
       GenerateMeditation(getIt<MeditationRepository>()));
+  getIt.registerSingleton<MeditationHistoryRepository>(
+      MeditationHistoryRepository());
 
   runApp(
     MultiProvider(
