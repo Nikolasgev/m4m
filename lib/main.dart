@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:m4m_f/core/network/api_client.dart';
 import 'package:m4m_f/core/network/api_constants.dart';
 import 'package:m4m_f/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:m4m_f/features/auth/presentation/pages/login_page.dart';
+import 'package:m4m_f/features/auth/presentation/pages/auth_page.dart';
 import 'package:m4m_f/features/meditation/data/repositories/meditation_history_repository.dart';
 import 'package:m4m_f/features/meditation/domain/repositories/meditation_repository.dart';
 import 'package:provider/provider.dart';
@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
           if (state is AuthAuthenticated) {
             return const MainNavigation();
           } else {
-            return LoginPage();
+            return const AuthPage();
           }
         },
       ),
