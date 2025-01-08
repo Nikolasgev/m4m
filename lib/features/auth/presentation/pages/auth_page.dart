@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:m4m_f/features/auth/presentation/pages/login_page.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:m4m_f/core/widgets/common_buttom.dart';
 import 'package:m4m_f/features/auth/presentation/pages/registration_page.dart';
 
 class AuthPage extends StatelessWidget {
@@ -8,25 +9,22 @@ class AuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Авторизация')),
+      extendBodyBehindAppBar: true,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ),
-                );
-              },
-              child: const Text('Войти'),
+            SizedBox(
+              width: double.infinity,
+              child: SvgPicture.asset(
+                'assets/svg/welcome.svg',
+              ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
+            const SizedBox(height: 120),
+            CommonButton(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              text: 'Создать новый аккаунт',
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -34,8 +32,19 @@ class AuthPage extends StatelessWidget {
                   ),
                 );
               },
-              child: const Text('Зарегистрироваться'),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Уже есть аккаунт?',
+                    style: Theme.of(context).textTheme.titleSmall),
+                TextButton(
+                  onPressed: () {},
+                  child: Text('Войти',
+                      style: Theme.of(context).textTheme.titleMedium),
+                )
+              ],
+            )
           ],
         ),
       ),

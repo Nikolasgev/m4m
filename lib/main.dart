@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:m4m_f/core/network/api_client.dart';
 import 'package:m4m_f/core/network/api_constants.dart';
+import 'package:m4m_f/core/themes/app_theme.dart';
 import 'package:m4m_f/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:m4m_f/features/auth/presentation/pages/auth_page.dart';
 import 'package:m4m_f/features/meditation/data/repositories/meditation_history_repository.dart';
@@ -60,6 +61,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Meditation App',
+      theme: AppTheme.lightTheme, // Светлая тема
+      darkTheme: AppTheme.darkTheme, // Темная тема
+      themeMode: ThemeMode.system,
       home: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           if (state is AuthAuthenticated) {
