@@ -9,7 +9,7 @@ class AppTheme {
       secondary: Color(0xFFA6C1EE),
       surface: Color(0xFFF6F1FB),
     ),
-    scaffoldBackgroundColor: const Color(0xFFF6F1FB),
+    scaffoldBackgroundColor: const Color.fromARGB(255, 251, 251, 251),
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFF8E97FD),
       titleTextStyle: TextStyle(
@@ -19,7 +19,7 @@ class AppTheme {
       ),
     ),
     textTheme: const TextTheme(
-      displayLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+      displayLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.w500),
       displayMedium: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
       bodyLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
       bodyMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),

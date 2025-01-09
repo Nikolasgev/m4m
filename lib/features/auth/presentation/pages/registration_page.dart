@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:m4m_f/core/widgets/common_buttom.dart';
+import 'package:m4m_f/core/widgets/common_text_field.dart';
 import 'package:m4m_f/features/auth/presentation/bloc/auth_bloc.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -27,23 +29,23 @@ class RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Регистрация'),
-        centerTitle: true,
+        backgroundColor: Colors.transparent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextFormField(
+              Text(
+                'Добро пожаловать!',
+                style: Theme.of(context).textTheme.displayLarge,
+              ),
+              const SizedBox(height: 48),
+              CommonTextField(
                 controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.emailAddress,
+                labelText: 'Email',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Пожалуйста, введите email';
@@ -56,13 +58,12 @@ class RegistrationPageState extends State<RegistrationPage> {
                 },
               ),
               const SizedBox(height: 16),
-              TextFormField(
+
+              // Поле для ввода пароля
+              CommonTextField(
                 controller: _passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Пароль',
-                  border: OutlineInputBorder(),
-                ),
-                obscureText: true,
+                labelText: 'Пароль',
+                isPasswordField: true, // Включаем режим пароля
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Пожалуйста, введите пароль';
@@ -74,13 +75,12 @@ class RegistrationPageState extends State<RegistrationPage> {
                 },
               ),
               const SizedBox(height: 16),
-              TextFormField(
+
+              // Поле для подтверждения пароля
+              CommonTextField(
                 controller: _confirmPasswordController,
-                decoration: const InputDecoration(
-                  labelText: 'Подтвердите пароль',
-                  border: OutlineInputBorder(),
-                ),
-                obscureText: true,
+                labelText: 'Подтвердите пароль',
+                isPasswordField: true, // Включаем режим пароля
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Пожалуйста, подтвердите пароль';
@@ -91,7 +91,8 @@ class RegistrationPageState extends State<RegistrationPage> {
                   return null;
                 },
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 64),
+
               BlocConsumer<AuthBloc, AuthState>(
                 listener: (context, state) {
                   if (state is AuthAuthenticated) {
@@ -109,39 +110,21 @@ class RegistrationPageState extends State<RegistrationPage> {
                   if (state is AuthLoading) {
                     return const Center(child: CircularProgressIndicator());
                   }
-                  return ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        context.read<AuthBloc>().add(
-                              RegisterEvent(
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                              ),
-                            );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text(
-                      'Зарегистрироваться',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  );
+                  return CommonButton(
+                      text: 'Зарегестрироваться',
+                      onTap: () {
+                        if (_formKey.currentState!.validate()) {
+                          context.read<AuthBloc>().add(
+                                RegisterEvent(
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                ),
+                              );
+                        }
+                      });
                 },
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  'Уже есть аккаунт? Войти',
-                  style: TextStyle(color: Colors.blue),
-                ),
-              ),
+              const SizedBox(height: 120),
             ],
           ),
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:m4m_f/core/widgets/common_buttom.dart';
+import 'package:m4m_f/features/auth/presentation/pages/login_page.dart';
 import 'package:m4m_f/features/auth/presentation/pages/registration_page.dart';
 
 class AuthPage extends StatelessWidget {
@@ -39,12 +40,21 @@ class AuthPage extends StatelessWidget {
                 Text('Уже есть аккаунт?',
                     style: Theme.of(context).textTheme.titleSmall),
                 TextButton(
-                  onPressed: () {},
-                  child: Text('Войти',
-                      style: Theme.of(context).textTheme.titleMedium),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'Войти',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                 )
               ],
-            )
+            ),
           ],
         ),
       ),

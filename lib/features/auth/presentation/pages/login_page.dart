@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:m4m_f/core/widgets/common_buttom.dart';
+import 'package:m4m_f/core/widgets/common_text_field.dart';
 import 'package:m4m_f/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:m4m_f/features/auth/presentation/pages/registration_page.dart';
 
@@ -12,21 +14,33 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
+            Text(
+              'Добро пожаловать!',
+              style: Theme.of(context).textTheme.displayLarge,
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            CommonTextField(
               controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+              labelText: 'Электронная почта',
             ),
-            TextField(
+            const SizedBox(
+              height: 20,
+            ),
+            CommonTextField(
               controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
+              labelText: 'Пароль',
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 60),
             BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
                 if (state is AuthError) {
@@ -39,17 +53,14 @@ class LoginPage extends StatelessWidget {
                 if (state is AuthLoading) {
                   return const CircularProgressIndicator();
                 }
-                return ElevatedButton(
-                  onPressed: () {
-                    context.read<AuthBloc>().add(
+                return CommonButton(
+                    text: 'Войти',
+                    onTap: () => context.read<AuthBloc>().add(
                           LoginEvent(
                             email: _emailController.text,
                             password: _passwordController.text,
                           ),
-                        );
-                  },
-                  child: const Text('Login'),
-                );
+                        ));
               },
             ),
             TextButton(
@@ -61,7 +72,11 @@ class LoginPage extends StatelessWidget {
                   ),
                 );
               },
-              child: const Text('Register'),
+              child: Text('Забыли пароль?',
+                  style: Theme.of(context).textTheme.titleMedium),
+            ),
+            const SizedBox(
+              height: 40,
             ),
           ],
         ),

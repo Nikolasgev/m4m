@@ -8,7 +8,7 @@ class CommonButton extends StatelessWidget {
     this.textColor = Colors.white,
     required this.onTap,
     this.width = double.infinity,
-    this.margin = const EdgeInsets.all(20),
+    this.margin = const EdgeInsets.symmetric(horizontal: 15),
     this.padding = const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
     this.borderRadius = 40,
   });
