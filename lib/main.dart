@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:m4m_f/core/network/api_client.dart';
 import 'package:m4m_f/core/network/api_constants.dart';
+import 'package:m4m_f/core/services/telegram_service.dart';
 import 'package:m4m_f/core/themes/app_theme.dart';
 import 'package:m4m_f/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:m4m_f/features/auth/presentation/pages/auth_page.dart';
@@ -20,10 +21,14 @@ import 'features/meditation/presentation/pages/main_navigation.dart';
 
 final getIt = GetIt.instance;
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
+  // Инициализация Telegram Web App
+  TelegramService.initTelegramWebApp();
+
+  // Остальной код инициализации
   getIt.registerSingleton<ApiClient>(ApiClient(baseURL));
   getIt.registerSingleton<MeditationRemoteDataSource>(
       MeditationRemoteDataSourceImpl(getIt<ApiClient>()));
