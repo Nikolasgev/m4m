@@ -8,6 +8,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:29992406568:android:588dcbf475fbd4478a2f1d",
+        "android_client_info": {
+          "package_name": "com.m4m.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBG03ug8zN7vWpjANCE9kYA3p7pIGNkUgM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:29992406568:android:987c73ccac1df72d8a2f1d",
         "android_client_info": {
           "package_name": "com.ng.m4m"

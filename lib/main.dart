@@ -3,9 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:m4m_f/core/firebase/firebase_options.dart';
 import 'package:m4m_f/core/network/api_client.dart';
 import 'package:m4m_f/core/network/api_constants.dart';
-import 'package:m4m_f/core/services/telegram_service.dart';
 import 'package:m4m_f/core/themes/app_theme.dart';
 import 'package:m4m_f/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:m4m_f/features/auth/presentation/pages/auth_page.dart';
@@ -23,10 +23,12 @@ final getIt = GetIt.instance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
-  // Инициализация Telegram Web App
-  TelegramService.initTelegramWebApp();
+  // Закомментируйте или удалите инициализацию Telegram Web App
+  // TelegramService.initTelegramWebApp();
 
   // Остальной код инициализации
   getIt.registerSingleton<ApiClient>(ApiClient(baseURL));

@@ -20,19 +20,30 @@
   <title>Meditation App</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- Подключение Telegram Web App API -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Подключение Firebase SDK -->
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCwYISh2KAafwD8YUteUnnwUG0cKR4zgtg",
+      authDomain: "mform-6aa5f.firebaseapp.com",
+      databaseURL: "https://mform-6aa5f-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "mform-6aa5f",
+      storageBucket: "mform-6aa5f.firebasestorage.app",
+      messagingSenderId: "29992406568",
+      appId: "1:29992406568:web:083d2b553722599d8a2f1d"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+  </script>
 </head>
 
 <body>
-  <script>
-    // Инициализация Telegram Web App
-    if (Telegram.WebApp.initData) {
-      Telegram.WebApp.ready(); // Подтверждаем, что приложение готово
-      Telegram.WebApp.expand(); // Разворачиваем приложение на весь экран
-    }
-  </script>
-
   <!-- Основной скрипт Flutter -->
   <script src="flutter_bootstrap.js" async></script>
 </body>

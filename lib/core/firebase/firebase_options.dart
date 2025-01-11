@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -49,22 +40,57 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBG03ug8zN7vWpjANCE9kYA3p7pIGNkUgM',
-    appId: '1:29992406568:android:987c73ccac1df72d8a2f1d',
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCwYISh2KAafwD8YUteUnnwUG0cKR4zgtg',
+    appId: '1:29992406568:web:083d2b553722599d8a2f1d',
     messagingSenderId: '29992406568',
     projectId: 'mform-6aa5f',
-    databaseURL: 'https://mform-6aa5f-default-rtdb.europe-west1.firebasedatabase.app',
+    authDomain: 'mform-6aa5f.firebaseapp.com',
+    databaseURL:
+        'https://mform-6aa5f-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'mform-6aa5f.firebasestorage.app',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyBG03ug8zN7vWpjANCE9kYA3p7pIGNkUgM',
+    appId: '1:29992406568:android:588dcbf475fbd4478a2f1d',
+    messagingSenderId: '29992406568',
+    projectId: 'mform-6aa5f',
+    databaseURL:
+        'https://mform-6aa5f-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'mform-6aa5f.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBkVfDlS2J_NWTfzXe_nTbUz3W_su4EhKg',
+    appId: '1:29992406568:ios:df5c94f32bc369f68a2f1d',
+    messagingSenderId: '29992406568',
+    projectId: 'mform-6aa5f',
+    databaseURL:
+        'https://mform-6aa5f-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'mform-6aa5f.firebasestorage.app',
+    iosBundleId: 'com.example.m4m',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBkVfDlS2J_NWTfzXe_nTbUz3W_su4EhKg',
     appId: '1:29992406568:ios:440db6e9350c476a8a2f1d',
     messagingSenderId: '29992406568',
     projectId: 'mform-6aa5f',
-    databaseURL: 'https://mform-6aa5f-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL:
+        'https://mform-6aa5f-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'mform-6aa5f.firebasestorage.app',
     iosBundleId: 'com.example.m4mf',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyCwYISh2KAafwD8YUteUnnwUG0cKR4zgtg',
+    appId: '1:29992406568:web:b943ba4972943df28a2f1d',
+    messagingSenderId: '29992406568',
+    projectId: 'mform-6aa5f',
+    authDomain: 'mform-6aa5f.firebaseapp.com',
+    databaseURL:
+        'https://mform-6aa5f-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'mform-6aa5f.firebasestorage.app',
   );
 }

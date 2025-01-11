@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.m4m</string>
+	<string>com.example.m4mf</string>
 	<key>PROJECT_ID</key>
 	<string>mform-6aa5f</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,7 +25,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:29992406568:ios:df5c94f32bc369f68a2f1d</string>
+	<string>1:29992406568:ios:440db6e9350c476a8a2f1d</string>
 	<key>DATABASE_URL</key>
 	<string>https://mform-6aa5f-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>
