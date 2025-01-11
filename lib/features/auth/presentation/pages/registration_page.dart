@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:m4m_f/core/widgets/common_buttom.dart';
+import 'package:m4m_f/core/widgets/common_button.dart';
 import 'package:m4m_f/core/widgets/common_text_field.dart';
 import 'package:m4m_f/features/auth/presentation/bloc/auth_bloc.dart';
 

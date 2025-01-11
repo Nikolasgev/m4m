@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:m4m_f/core/widgets/common_button.dart';
 import 'package:m4m_f/features/meditation/presentation/bloc/meditation_bloc.dart';
 import 'package:m4m_f/features/meditation/presentation/widgets/custom_dropdown_selector.dart';
 import 'package:m4m_f/features/meditation/presentation/widgets/custom_wrap.dart';
@@ -83,20 +84,20 @@ class MeditationInputForm extends StatelessWidget {
                 controller: textController,
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
-                decoration: const InputDecoration(
-                  labelText: 'Напишите что бы вы хотели добавить?',
+                decoration: InputDecoration(
+                  labelText: 'Напишите что бы вы хотели добавить',
+                  labelStyle: Theme.of(context).textTheme.titleSmall,
                   contentPadding:
-                      EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                 ),
                 style: const TextStyle(fontSize: 18),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 48),
 
-              // Кнопка генерации
-              ElevatedButton(
-                onPressed: () => _onGeneratePressed(context),
-                child: const Text('Generate'),
-              ),
+              CommonButton(
+                text: 'Сгенерировать',
+                onTap: () => _onGeneratePressed(context),
+              )
             ],
           ),
         ),
@@ -109,7 +110,6 @@ class MeditationInputForm extends StatelessWidget {
         (context.read<MeditationBloc>().state as MeditationInitial)
             .selectedCategories;
 
-    // Проверка обязательных полей
     final isValid = [
       _hasSelection(selectedCategories, currentMood),
       _hasSelection(selectedCategories, voiceOptions, prefix: 'voice:'),
@@ -128,10 +128,9 @@ class MeditationInputForm extends StatelessWidget {
       return;
     }
 
-    // Получаем выбранные значения
     final moods = selectedCategories
         .where((category) => currentMood.contains(category))
-        .toList(); // Список выбранных настроений
+        .toList();
     final voice = selectedCategories
         .firstWhere((category) => category.startsWith('voice:'))
         .replaceFirst('voice:', '');
@@ -140,15 +139,13 @@ class MeditationInputForm extends StatelessWidget {
         .replaceFirst('duration:', '');
     final additionalText = context.read<MeditationBloc>().textController.text;
 
-    // Формируем JSON
     final jsonBody = {
-      'moods': moods, // Теперь moods - это список
+      'moods': moods,
       'voice': voice,
       'duration': duration,
       'additionalText': additionalText,
     };
 
-    // Отправляем JSON на сервер
     context.read<MeditationBloc>().add(
           GenerateMeditationEvent(prompt: jsonBody),
         );

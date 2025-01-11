@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:m4m_f/core/widgets/common_buttom.dart';
+import 'package:m4m_f/core/widgets/common_button.dart';
 import 'package:m4m_f/features/auth/presentation/pages/login_page.dart';
 import 'package:m4m_f/features/auth/presentation/pages/registration_page.dart';
 

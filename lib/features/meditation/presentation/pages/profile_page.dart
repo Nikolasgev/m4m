@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:m4m_f/core/widgets/common_button.dart';
 import 'package:m4m_f/features/auth/presentation/pages/auth_page.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -12,8 +13,9 @@ class ProfilePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text('Profile Page Content'),
-          ElevatedButton(
-            onPressed: () async {
+          CommonButton(
+            text: 'Выйти',
+            onTap: () async {
               await FirebaseAuth.instance.signOut();
               Navigator.pushReplacement(
                 context,
@@ -22,8 +24,7 @@ class ProfilePage extends StatelessWidget {
                 ),
               );
             },
-            child: const Text('Выйти'),
-          ),
+          )
         ],
       ),
     );
